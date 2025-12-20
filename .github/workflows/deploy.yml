@@ -6,16 +6,14 @@ concurrency:
 
 on:
   schedule:
-    # 凌晨任务：北京时间每天 01:00（UTC 前一天 17:00）
+    # 凌晨任务：北京时间每天 01:27（对应 UTC 前一天 17:27）
     - cron: '21 17 * * *'
-    # 早间任务：北京时间每天 05:00（UTC 前一天 21:00）
-    #- cron: '0 21 * * *'
-    # 午间任务：北京时间每天 11:40（UTC 03:40）
-    #- cron: '40 3 * * *'
-    # 晚间任务：北京时间每天 22:00（UTC 14:00）
-    #- cron: '0 14 * * *'
-  workflow_dispatch:  # 手动触发
-
+    # 早间任务：北京时间每天 08:02（对应 UTC 当天 00:02）
+    - cron: '02 0 * * *'
+    # 午间任务：北京时间每天 14:40（对应 UTC 当天 06:40）
+    - cron: '40 06 * * *'
+    # 晚间任务：北京时间每天 20:05（对应 UTC 当天 12:05）
+    - cron: '05 12 * * *'
 jobs:
   deploy:
     runs-on: ubuntu-22.04
@@ -29,12 +27,13 @@ jobs:
         echo "nameserver 8.8.4.4" | sudo tee -a /etc/resolv.conf
 
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
+        cache: 'pip' # 新增pip缓存，加快依赖安装速度
 
     - name: Install dependencies
       run: |
